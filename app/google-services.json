@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "640736538908",
+    "project_id": "bukley-1a4e2",
+    "storage_bucket": "bukley-1a4e2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:640736538908:android:4984a7d93da078cb544ad9",
+        "android_client_info": {
+          "package_name": "e.kailina.bukley"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "640736538908-g0c81m6521vbbi7jn5o1hdps7d08v8er.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "e.kailina.bukley",
+            "certificate_hash": "4d8d346601a05ec8bd7aa62e09390e043a4a922d"
+          }
+        },
+        {
+          "client_id": "640736538908-h7kf4pspqhmocek73vak2cs8r4cjj2ds.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACEhy9ci3JuJzqJ-BL-FjfV1bjpj1qy-Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "640736538908-h7kf4pspqhmocek73vak2cs8r4cjj2ds.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
