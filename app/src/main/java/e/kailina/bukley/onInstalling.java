@@ -3,6 +3,7 @@ package e.kailina.bukley;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -26,13 +27,23 @@ public class onInstalling extends AppCompatActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                next_click_count=2;
-                text.setText("need to set");
-//                text.setTextSize(25);
-//                layout.setBackgroundResource(R.drawable.on_install2);
-
-
+               text.setText(R.string.welcomestring2);
+                text.setTextSize(25);
+                next.setText("Explore");
+                next.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent letsStart=new Intent(onInstalling.this,Main2Activity.class);
+                        startActivity(letsStart);
+                        finish();
+                    }
+                });
             }
-        });
-    }
+
+        });}
+
+
+
+
+
 }
