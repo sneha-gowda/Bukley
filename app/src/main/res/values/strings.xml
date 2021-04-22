@@ -2,6 +2,9 @@
     <string name="app_name">Bukley</string>
     <string name="welcomestring2">Here, you can buy and sell used books</string>
     <string name="title_activity_main2">mainActivity2</string>
+    <string name="forgotpassword"><u>Forgot Password</u></string>
+    <string name="login"><u>Login</u></string>
+    <string name="register"><u>Register</u></string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
@@ -92,4 +95,5 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="action_settings">Settings</string>
+    <string name="bukley">BUKLEY</string>
 </resources>

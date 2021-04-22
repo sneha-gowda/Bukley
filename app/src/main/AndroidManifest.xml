@@ -11,22 +11,30 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".Register"
+            android:parentActivityName=".Main2Activity"
+            android:theme="@style/TitleBar" />
 
-        <activity android:name=".Main2Activity"/>
+        <activity android:name=".Login"
+            android:theme="@style/TitleBar"
+            android:parentActivityName=".Main2Activity"/>
+
+        <activity android:name=".Main2Activity"
+            android:theme="@style/TitleBar"/>
 
         <activity
             android:name=".onInstalling"
-            android:theme="@style/TitleBar" />
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
             android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

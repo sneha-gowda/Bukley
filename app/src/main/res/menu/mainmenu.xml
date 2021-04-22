@@ -6,13 +6,24 @@
         android:title="login"
         app:showAsAction="never"
         tools:ignore="HardcodedText" />
+
     <item android:id="@+id/getInTouch"
         android:title="MailUs"
         app:showAsAction="never"
         tools:ignore="HardcodedText" />
+
     <item android:id="@+id/sellBook"
         android:title="SellBook"
         app:showAsAction="never"
         tools:ignore="HardcodedText" />
 
+    <item android:id="@+id/Register"
+        android:title="Register"
+        app:showAsAction="never"
+        tools:ignore="HardcodedText" />
+
+    <item android:id="@+id/Logout"
+        android:title="Logout"
+        app:showAsAction="never"
+        tools:ignore="HardcodedText" />
 </menu>
