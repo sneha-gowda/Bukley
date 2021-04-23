@@ -7,15 +7,22 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Button;
+import com.google.firebase.auth.FirebaseAuth;
+
 
 public class Main2Activity extends AppCompatActivity {
-    Button register;
-
+    Boolean value;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+        Intent intent=getIntent();
+         value=intent.getBooleanExtra("finishedRegistration",false);
+         if(value){
+             System.out.println("came");
+             invalidateOptionsMenu();
+         }
+
     }
 
     @Override
@@ -24,16 +31,16 @@ public class Main2Activity extends AppCompatActivity {
         menuInflater.inflate(R.menu.mainmenu,menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         //Handle item selection
         switch (item.getItemId()) {
-            case R.id.login:
-                Intent loginActivity=new Intent(Main2Activity.this,Login.class);
-                startActivity(loginActivity);
+            case R.id.Login:
+                Intent loginActivity1=new Intent(Main2Activity.this,Login.class);
+                startActivity(loginActivity1);
                 return true;
             case R.id.getInTouch:
-                //perform any action;
                 return true;
             case R.id.sellBook:
                 //perform any action;
@@ -43,10 +50,34 @@ public class Main2Activity extends AppCompatActivity {
                 startActivity(registerActivity);
                 return true;
             case R.id.Logout:
-                //perform any action;
+                FirebaseAuth.getInstance().signOut();
+                invalidateOptionsMenu();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu){
+        if(value) {
+            MenuItem hideRegisterr=menu.findItem(R.id.Register);
+            hideRegisterr.setVisible(false);
+            MenuItem hideLogin=menu.findItem(R.id.Login);
+            hideLogin.setVisible(false);
+            MenuItem showLogout=menu.findItem(R.id.Logout);
+            showLogout.setVisible(true);
+            value=false;
+        }
+        else if(value){
+            MenuItem showRegisterr=menu.findItem(R.id.Register);
+            showRegisterr.setVisible(true);
+            MenuItem showLogin=menu.findItem(R.id.Login);
+            showLogin.setVisible(true);
+            MenuItem hideLogout=menu.findItem(R.id.Logout);
+            hideLogout.setVisible(false);
+        }
+        super.onPrepareOptionsMenu(menu);
+        return true;
+    }
+
 }
