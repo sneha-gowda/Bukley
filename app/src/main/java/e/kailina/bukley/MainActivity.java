@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent onInstalling=new Intent(MainActivity.this,onInstalling.class);
                 startActivity(onInstalling);
                 finish();
-
             }
         },timer);
     }

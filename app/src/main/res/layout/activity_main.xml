@@ -9,7 +9,7 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/Bukley"
         android:layout_width="214dp"
         android:layout_height="67dp"
         android:fontFamily="@font/berkshireswashregular"

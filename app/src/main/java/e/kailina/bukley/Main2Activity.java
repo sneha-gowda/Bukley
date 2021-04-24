@@ -60,8 +60,6 @@ public class Main2Activity extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu){
         if(value) {
-            MenuItem hideRegisterr=menu.findItem(R.id.Register);
-            hideRegisterr.setVisible(false);
             MenuItem hideLogin=menu.findItem(R.id.Login);
             hideLogin.setVisible(false);
             MenuItem showLogout=menu.findItem(R.id.Logout);
@@ -69,8 +67,7 @@ public class Main2Activity extends AppCompatActivity {
             value=false;
         }
         else if(value){
-            MenuItem showRegisterr=menu.findItem(R.id.Register);
-            showRegisterr.setVisible(true);
+
             MenuItem showLogin=menu.findItem(R.id.Login);
             showLogin.setVisible(true);
             MenuItem hideLogout=menu.findItem(R.id.Logout);
