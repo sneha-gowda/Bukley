@@ -2,33 +2,38 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="e.kailina.bukley">
-    <uses-permission android:name="android.permission.NTERNET"/>
+
+    <uses-permission android:name="android.permission.NTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
-        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Register"
-            android:parentActivityName=".Main2Activity"
+        <activity android:name=".uploadBookDetails"
             android:theme="@style/TitleBar" />
 
-        <activity android:name=".Login"
-            android:theme="@style/TitleBar"
-            android:parentActivityName=".Main2Activity"/>
-
-        <activity android:name=".Main2Activity"
-            android:theme="@style/TitleBar"/>
-
+        <activity
+            android:name=".Register"
+            android:parentActivityName=".Main2Activity"
+            android:theme="@style/TitleBar" />
+        <activity
+            android:name=".Login"
+            android:parentActivityName=".Main2Activity"
+            android:theme="@style/TitleBar" />
+        <activity
+            android:name=".Main2Activity"
+            android:theme="@style/TitleBar" />
         <activity
             android:name=".onInstalling"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
