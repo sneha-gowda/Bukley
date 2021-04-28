@@ -17,8 +17,10 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
+
         <activity android:name=".uploadBookDetails"
-            android:theme="@style/TitleBar" />
+            android:theme="@style/TitleBar"
+            android:parentActivityName=".Main2Activity"/>
 
         <activity
             android:name=".Register"
