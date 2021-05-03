@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,13 +27,24 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.InputStream;
+import java.util.HashMap;
 
 public class uploadBookDetails extends AppCompatActivity {
     Uri imagePath;
@@ -42,6 +54,12 @@ public class uploadBookDetails extends AppCompatActivity {
     Button selectCategory;
     Bitmap bitmap;
     ProgressBar progressbar;
+    String URL;
+    Book book;
+    String userId= FirebaseAuth.getInstance().getCurrentUser().getUid();
+//    SharedPreferences numberOfBooks=getSharedPreferences("NumberofBooks",MODE_PRIVATE);
+//    SharedPreferences.Editor edit=numberOfBooks.edit().putString("currentNoOfBooks",);
+//    edit.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,38 +157,84 @@ public class uploadBookDetails extends AppCompatActivity {
             else if(TextUtils.isEmpty(E_name)){
                 bookEdition.setError("Please enter book Edition");
             }
-            else if(TextUtils.isEmpty(category)){
-                selectCategory.setError("Please select book category");
-            }
             else if(TextUtils.isEmpty(B_price)){
                 price.setError("Please enter book price");
             }
+            else if(TextUtils.isEmpty(category)){
+                Toast.makeText(uploadBookDetails.this,"Please select book category",Toast.LENGTH_SHORT).show();
+            }
             else{
+                book=new Book(b_name,A_name,E_name,B_price,category);
                 uploadToFireBase();
             }
 
         }
         else{
-            Toast.makeText(uploadBookDetails.this,"Plese provide book image",Toast.LENGTH_LONG).show();
+            Toast.makeText(uploadBookDetails.this,"Please provide book image",Toast.LENGTH_LONG).show();
         }
-
     }
+
+
+
     public void uploadToFireBase(){
         progressbar.setVisibility(View.VISIBLE);
-        FirebaseStorage storage=FirebaseStorage.getInstance();
-        SharedPreferences sharedPreferences=getSharedPreferences("User_details",MODE_PRIVATE);
-        String username=sharedPreferences.getString("Name","notset");
-        StorageReference storageReference=storage.getReference().child(username);
+        final FirebaseStorage storage=FirebaseStorage.getInstance();
+        final StorageReference storageReference=storage.getReference(userId+"/"+bookName.getText().toString().trim());
+
+
+
         storageReference.putFile(imagePath).
                 addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        progressbar.setVisibility(View.GONE);
-                        Toast.makeText(uploadBookDetails.this,"Uploaded Successefully",Toast.LENGTH_SHORT).show();
                     }
                 }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                progressbar.setVisibility(View.INVISIBLE);
+                Toast.makeText(uploadBookDetails.this,"Failed to connect try again",Toast.LENGTH_SHORT).show();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        HashMap<String,Object> imageuri=new HashMap<>();
+                        imageuri.put("ImageLocation",uri);
+                        URL=uri.toString();
+                        book.setUri(URL);
+                        uploadToRealTimeDatabase();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(uploadBookDetails.this,"failer to get url",Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+    }
+
+
+    public void uploadToRealTimeDatabase(){
+        progressbar.setVisibility(View.GONE);
+        final FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
+        final DatabaseReference databaseReference=firebaseDatabase.getReference(userId+"/"+book.B_name);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                databaseReference.setValue(book);
+                Toast.makeText(uploadBookDetails.this,"Uploaded Successefully",Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(uploadBookDetails.this,"Failed to Upload, Try again",Toast.LENGTH_LONG).show();
 
             }
         });

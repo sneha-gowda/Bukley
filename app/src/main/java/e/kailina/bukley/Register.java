@@ -35,9 +35,10 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.Objects;
 
 public class Register extends AppCompatActivity {
-    EditText name,password,email,phone;
+    EditText name,password,email;
     ProgressBar progressBar;
     Button Register,goto_login;
     FirebaseAuth fAuth;
@@ -76,13 +77,14 @@ public class Register extends AppCompatActivity {
                 else{
                     SharedPreferences userDetails= getSharedPreferences("User_details",MODE_PRIVATE);
                     SharedPreferences.Editor edit=userDetails.edit();
-                    edit.putString("Name",User_name);
+                    edit.putString("Name",User_name).apply();
+
                     progressBar.setVisibility(View.VISIBLE);
                     fAuth.createUserWithEmailAndPassword(User_email,User_password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()) {
-                                fAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                Objects.requireNonNull(fAuth.getCurrentUser()).sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task2) {
                                         if (task2.isSuccessful()) {
@@ -118,7 +120,6 @@ public class Register extends AppCompatActivity {
                             }
                             else{
                                 Toast.makeText(Register.this,"Error:"+task.getException().getMessage(),Toast.LENGTH_SHORT).show();
-                                Log.d("mytag",task.getException().getMessage());
                                 progressBar.setVisibility(View.GONE);
                             }
                         }
@@ -147,9 +148,9 @@ public class Register extends AppCompatActivity {
             int     exitValue = ipProcess.waitFor();
             return (exitValue == 0);
         }
-        catch (IOException e)          { e.printStackTrace(); }
-        catch (InterruptedException e) { e.printStackTrace(); }
-
+        catch (Exception e){
+            e.printStackTrace();
+        }
         return false;
     }
 

@@ -1,27 +1,21 @@
 package e.kailina.bukley;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 
 
 
 public class Main2Activity extends AppCompatActivity {
-    Boolean value;
+    Boolean value=false;
     Button uploadImage;
     FirebaseAuth fAuth=FirebaseAuth.getInstance();
 
@@ -31,6 +25,10 @@ public class Main2Activity extends AppCompatActivity {
         setContentView(R.layout.activity_main2);
         Intent intent=getIntent();
         uploadImage=findViewById(R.id.uploadImage);
+        if(fAuth.getCurrentUser()!=null && fAuth.getCurrentUser().isEmailVerified()){
+            value=true;
+            invalidateOptionsMenu();
+        }
         uploadImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,13 +51,6 @@ public class Main2Activity extends AppCompatActivity {
                 }
             }
         });
-
-         value=intent.getBooleanExtra("finishedRegistration",false);
-         if(value){
-             System.out.println("came");
-             invalidateOptionsMenu();
-         }
-
     }
 
     @Override
@@ -89,6 +80,8 @@ public class Main2Activity extends AppCompatActivity {
             case R.id.Logout:
                 FirebaseAuth.getInstance().signOut();
                 invalidateOptionsMenu();
+                value=false;
+                invalidateOptionsMenu();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -101,16 +94,15 @@ public class Main2Activity extends AppCompatActivity {
             hideLogin.setVisible(false);
             MenuItem showLogout=menu.findItem(R.id.Logout);
             showLogout.setVisible(true);
-            value=false;
         }
-        else if(value){
+        else{
 
             MenuItem showLogin=menu.findItem(R.id.Login);
             showLogin.setVisible(true);
             MenuItem hideLogout=menu.findItem(R.id.Logout);
             hideLogout.setVisible(false);
         }
-        super.onPrepareOptionsMenu(menu);
+
         return true;
     }
 
