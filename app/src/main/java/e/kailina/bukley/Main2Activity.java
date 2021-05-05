@@ -1,7 +1,13 @@
 package e.kailina.bukley;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,19 +17,38 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 
 
 public class Main2Activity extends AppCompatActivity {
     Boolean value=false;
     Button uploadImage;
     FirebaseAuth fAuth=FirebaseAuth.getInstance();
+    RecyclerView recyclerView;
+    private DatabaseReference databaseReference;
+    private ArrayList<downloadBooks> bookDetails;
+    private recycleViewAdapter recycleViewAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-        Intent intent=getIntent();
+        recyclerView=findViewById(R.id.recyclerView);
+        GridLayoutManager linearLayoutManager=new GridLayoutManager(Main2Activity.this,2);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setHasFixedSize(true);
+        databaseReference= FirebaseDatabase.getInstance().getReference();
+        bookDetails=new ArrayList<>();
+        ClearAll();
+        GetDataFromFireBase();
         uploadImage=findViewById(R.id.uploadImage);
         if(fAuth.getCurrentUser()!=null && fAuth.getCurrentUser().isEmailVerified()){
             value=true;
@@ -104,6 +129,38 @@ public class Main2Activity extends AppCompatActivity {
         }
 
         return true;
+    }
+    public void GetDataFromFireBase(){
+        Query query =databaseReference.child("Images");
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ClearAll();
+                downloadBooks details=new downloadBooks();
+                for(DataSnapshot snapshot1:snapshot.getChildren()) {
+                    details.setBookname(snapshot1.child("b_name").getValue().toString());
+                    details.setPrice(snapshot1.child("b_price").getValue().hashCode());
+                    details.setImageUrl(snapshot1.child("image_path").getValue().toString());
+                    bookDetails.add(details);
+                }
+                recycleViewAdapter=new recycleViewAdapter(getApplicationContext(),bookDetails);
+                recyclerView.setAdapter(recycleViewAdapter);
+                recycleViewAdapter.notifyDataSetChanged();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    private void ClearAll(){
+        if(bookDetails!=null){
+            bookDetails.clear();
+        }
+        if(recycleViewAdapter!=null){
+            recycleViewAdapter.notifyDataSetChanged();
+        }
+        bookDetails=new ArrayList<>();
     }
 
 }

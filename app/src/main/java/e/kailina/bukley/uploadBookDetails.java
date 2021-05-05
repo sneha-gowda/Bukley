@@ -57,9 +57,6 @@ public class uploadBookDetails extends AppCompatActivity {
     String URL;
     Book book;
     String userId= FirebaseAuth.getInstance().getCurrentUser().getUid();
-//    SharedPreferences numberOfBooks=getSharedPreferences("NumberofBooks",MODE_PRIVATE);
-//    SharedPreferences.Editor edit=numberOfBooks.edit().putString("currentNoOfBooks",);
-//    edit.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,6 +103,8 @@ public class uploadBookDetails extends AppCompatActivity {
         if (requestCode == 2 && resultCode == RESULT_OK && data != null && data.getData()!=null) {
             imagePath=data.getData();
             bookImage.setImageURI(imagePath);
+            bookImage.setMaxWidth(350);
+            bookImage.setMaxHeight(200);
             try {
                 InputStream inputStream=getContentResolver().openInputStream(imagePath);
                 bitmap= BitmapFactory.decodeStream(inputStream);
@@ -223,19 +222,39 @@ public class uploadBookDetails extends AppCompatActivity {
 
 
     public void uploadToRealTimeDatabase(){
-        progressbar.setVisibility(View.GONE);
         final FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
-        final DatabaseReference databaseReference=firebaseDatabase.getReference(userId+"/"+book.B_name);
+        final DatabaseReference databaseReference=firebaseDatabase.getReference("Users"+"/").child(userId+"/"+book.B_name);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 databaseReference.setValue(book);
-                Toast.makeText(uploadBookDetails.this,"Uploaded Successefully",Toast.LENGTH_SHORT).show();
+                progressbar.setVisibility(View.INVISIBLE);
+                androidx.appcompat.app.AlertDialog.Builder dialog=new androidx.appcompat.app.AlertDialog.Builder(uploadBookDetails.this);
+                dialog.setMessage("Uploaded Successefully");
+                dialog.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                androidx.appcompat.app.AlertDialog alertDialog=dialog.create();
+                alertDialog.show();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                progressbar.setVisibility(View.INVISIBLE);
                 Toast.makeText(uploadBookDetails.this,"Failed to Upload, Try again",Toast.LENGTH_LONG).show();
 
+            }
+        });
+        final DatabaseReference imageReference=firebaseDatabase.getReference("Images"+"/").child(book.B_name);
+        imageReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                imageReference.setValue(book);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
             }
         });
     }
