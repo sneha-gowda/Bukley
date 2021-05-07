@@ -2,11 +2,11 @@ package e.kailina.bukley;
 
 public class downloadBooks {
     String Bookname, imageUrl;
-    int price;
+    String price;
     public downloadBooks(){
 
     }
-    public downloadBooks(String bookname,String imageUrl,int price){
+    public downloadBooks(String bookname,String imageUrl,String price){
         this.Bookname=bookname;
         this.imageUrl=imageUrl;
         this.price=price;
@@ -27,11 +27,9 @@ public class downloadBooks {
         this.imageUrl = imageUrl;
     }
 
-    public void setPrice(int price) {
-        this.price = price;
+    public void setPrice(String price) { this.price = price;
     }
 
-    public int getPrice() {
-        return price;
+    public String getPrice() { return price;
     }
 }

@@ -1,6 +1,7 @@
 package e.kailina.bukley;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,9 +34,20 @@ public class recycleViewAdapter extends RecyclerView.Adapter<recycleViewAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         holder.bookName.setText(imageList.get(position).getBookname());
+        holder.bookPrice.setText(imageList.get(position).getPrice());
         Glide.with(context).load(imageList.get(position).getImageUrl()).into(holder.imageView);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String bName= imageList.get(position).getBookname();
+                Intent gotoContactSeller =new Intent( context, ContectSeller.class);
+                gotoContactSeller.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                gotoContactSeller.putExtra("BookName",bName);
+                context.startActivity(gotoContactSeller);
+            }
+        });
     }
 
     @Override
@@ -50,7 +62,7 @@ public class recycleViewAdapter extends RecyclerView.Adapter<recycleViewAdapter.
             super(itemView);
             imageView= itemView.findViewById(R.id.bookpic);
             bookName=itemView.findViewById(R.id.bName);
-            bookPrice=itemView.findViewById(R.id.bookprice);
+            bookPrice=itemView.findViewById(R.id.bPrice);
 
         }
     }

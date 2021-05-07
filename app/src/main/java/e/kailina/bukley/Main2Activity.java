@@ -4,10 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +13,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,18 +36,23 @@ public class Main2Activity extends AppCompatActivity {
     private recycleViewAdapter recycleViewAdapter;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+
         recyclerView=findViewById(R.id.recyclerView);
-        GridLayoutManager linearLayoutManager=new GridLayoutManager(Main2Activity.this,2);
-        recyclerView.setLayoutManager(linearLayoutManager);
+        GridLayoutManager gridLayoutManager=new GridLayoutManager(Main2Activity.this,2);
+        recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setHasFixedSize(true);
         databaseReference= FirebaseDatabase.getInstance().getReference();
         bookDetails=new ArrayList<>();
         ClearAll();
         GetDataFromFireBase();
+
+
+
         uploadImage=findViewById(R.id.uploadImage);
         if(fAuth.getCurrentUser()!=null && fAuth.getCurrentUser().isEmailVerified()){
             value=true;
@@ -90,13 +94,13 @@ public class Main2Activity extends AppCompatActivity {
         //Handle item selection
         switch (item.getItemId()) {
             case R.id.Login:
-                Intent loginActivity1=new Intent(Main2Activity.this,Login.class);
+                Intent loginActivity1 = new Intent(Main2Activity.this, Login.class);
                 startActivity(loginActivity1);
                 return true;
             case R.id.getInTouch:
                 return true;
             case R.id.sellBook:
-                //perform any action;
+                gotoUploadActivity();
                 return true;
             case R.id.Register:
                 Intent registerActivity=new Intent(Main2Activity.this,Register.class);
@@ -130,16 +134,20 @@ public class Main2Activity extends AppCompatActivity {
 
         return true;
     }
+
+
     public void GetDataFromFireBase(){
+
         Query query =databaseReference.child("Images");
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ClearAll();
-                downloadBooks details=new downloadBooks();
+//                progressBar.setVisibility(View.VISIBLE);
                 for(DataSnapshot snapshot1:snapshot.getChildren()) {
+                    downloadBooks details=new downloadBooks();
                     details.setBookname(snapshot1.child("b_name").getValue().toString());
-                    details.setPrice(snapshot1.child("b_price").getValue().hashCode());
+                    details.setPrice("Rs "+snapshot1.child("b_price").getValue().toString());
                     details.setImageUrl(snapshot1.child("image_path").getValue().toString());
                     bookDetails.add(details);
                 }
@@ -161,6 +169,25 @@ public class Main2Activity extends AppCompatActivity {
             recycleViewAdapter.notifyDataSetChanged();
         }
         bookDetails=new ArrayList<>();
+    }
+
+    public void gotoUploadActivity(){
+        if(fAuth.getCurrentUser()!=null && fAuth.getCurrentUser().isEmailVerified()){
+            Intent gotoupload=new Intent(Main2Activity.this,uploadBookDetails.class);
+            startActivity(gotoupload);
+        }
+        else{
+            AlertDialog.Builder dialog=new AlertDialog.Builder(Main2Activity.this);
+            dialog.setMessage("Please Login to upload file");
+            dialog.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            AlertDialog alertDialog=dialog.create();
+            alertDialog.show();
+        }
     }
 
 }

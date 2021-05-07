@@ -1,45 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="5dp"
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="220dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="5dp">
 
         <LinearLayout
-            android:layout_width="389dp"
-            android:layout_height="171dp"
-            android:background="#4AE06161"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#040505"
             android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/bookpic"
                 android:layout_width="match_parent"
-                android:layout_height="125dp"
+                android:layout_height="200dp"
+                android:layout_alignParentStart="false"
+                android:layout_alignParentTop="false"
+                android:layout_alignParentEnd="false"
                 android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="0dp"
+                android:background="#17191A"
                 android:contentDescription="Cover Page"
                 android:src="@mipmap/ic_launcher" />
 
             <TextView
                 android:id="@+id/bName"
+                style="@android:style/Widget.Holo.Light.TextView.SpinnerItem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="#C1E2F1"
                 android:text="TextView"
-                android:textAlignment="center" />
+                android:textSize="18dp"
+                android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/bookprice"
+                android:id="@+id/bPrice"
+                style="@style/Widget.AppCompat.TextView.SpinnerItem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="#EBE4A8"
                 android:text="TextView"
-                android:textAlignment="center" />
+                android:textSize="18dp"
+                android:textStyle="bold" />
 
         </LinearLayout>
-
-
     </androidx.cardview.widget.CardView>
 </LinearLayout>

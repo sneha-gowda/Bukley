@@ -17,11 +17,11 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-
-        <activity android:name=".uploadBookDetails"
-            android:theme="@style/TitleBar"
-            android:parentActivityName=".Main2Activity"/>
-
+        <activity android:name=".ContectSeller"></activity>
+        <activity
+            android:name=".uploadBookDetails"
+            android:parentActivityName=".Main2Activity"
+            android:theme="@style/TitleBar" />
         <activity
             android:name=".Register"
             android:parentActivityName=".Main2Activity"
