@@ -143,12 +143,16 @@ public class Main2Activity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ClearAll();
-//                progressBar.setVisibility(View.VISIBLE);
                 for(DataSnapshot snapshot1:snapshot.getChildren()) {
                     downloadBooks details=new downloadBooks();
                     details.setBookname(snapshot1.child("b_name").getValue().toString());
                     details.setPrice("Rs "+snapshot1.child("b_price").getValue().toString());
                     details.setImageUrl(snapshot1.child("image_path").getValue().toString());
+                    details.setAuthor(snapshot1.child("b_author").getValue().toString());
+                    details.setEdition(snapshot1.child("b_edition").getValue().toString());
+                    details.setS_name(snapshot1.child("s_name").getValue().toString());
+                    details.setS_mail(snapshot1.child("s_mail").getValue().toString());
+                    details.setS_phone(snapshot1.child("s_phone").getValue().toString());
                     bookDetails.add(details);
                 }
                 recycleViewAdapter=new recycleViewAdapter(getApplicationContext(),bookDetails);

@@ -142,10 +142,30 @@ public class uploadBookDetails extends AppCompatActivity {
     }
 
     public void uploadBoodDetails(View v){
+
         String b_name=bookName.getText().toString().trim();
         String A_name=bookAuthor.getText().toString().trim();
         String E_name=bookEdition.getText().toString().trim();
-        String B_price=price.getText().toString().trim();
+        final String B_price=price.getText().toString().trim();
+
+
+        FirebaseDatabase.getInstance().getReference().child("User").child(userId).child("User_Data").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    Log.d("firebase", "blabla");
+                    String S_name=task.getResult().child("User_name").getValue().toString();
+                    String S_mail=task.getResult().child("User_mail").getValue().toString();
+                    String S_phone=task.getResult().child("User_phone").getValue().toString();
+                    book.setS_name(S_name); book.setS_mail(S_mail);book.setS_phone(S_phone);
+//                    Toast.makeText(uploadBookDetails.this,S_name,Toast.LENGTH_LONG).show();
+
+                }
+            }
+        });
         if(imagePath!=null){
             if(TextUtils.isEmpty(b_name)){
                 bookName.setError("Please enter book name");
@@ -178,10 +198,7 @@ public class uploadBookDetails extends AppCompatActivity {
     public void uploadToFireBase(){
         progressbar.setVisibility(View.VISIBLE);
         final FirebaseStorage storage=FirebaseStorage.getInstance();
-        final StorageReference storageReference=storage.getReference(userId+"/"+bookName.getText().toString().trim());
-
-
-
+        final StorageReference storageReference=storage.getReference(userId+"/Books"+bookName.getText().toString().trim());
         storageReference.putFile(imagePath).
                 addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
@@ -223,7 +240,7 @@ public class uploadBookDetails extends AppCompatActivity {
 
     public void uploadToRealTimeDatabase(){
         final FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
-        final DatabaseReference databaseReference=firebaseDatabase.getReference("Users"+"/").child(userId+"/"+book.B_name);
+        final DatabaseReference databaseReference=firebaseDatabase.getReference("User"+"/").child(userId+"/Books/"+book.B_name);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

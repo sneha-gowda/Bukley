@@ -45,6 +45,13 @@ public class recycleViewAdapter extends RecyclerView.Adapter<recycleViewAdapter.
                 Intent gotoContactSeller =new Intent( context, ContectSeller.class);
                 gotoContactSeller.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 gotoContactSeller.putExtra("BookName",bName);
+                gotoContactSeller.putExtra("BookAuthor",imageList.get(position).getAuthor());
+                gotoContactSeller.putExtra("BookEdition",imageList.get(position).getEdition());
+                gotoContactSeller.putExtra("BookPrice",imageList.get(position).getPrice());
+                gotoContactSeller.putExtra("ImageUrl",imageList.get(position).getImageUrl());
+                gotoContactSeller.putExtra("S_name",imageList.get(position).getS_name());
+                gotoContactSeller.putExtra("S_mail",imageList.get(position).getS_mail());
+                gotoContactSeller.putExtra("S_phone",imageList.get(position).getS_phone());
                 context.startActivity(gotoContactSeller);
             }
         });
