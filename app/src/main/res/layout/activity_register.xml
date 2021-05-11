@@ -13,7 +13,7 @@
         android:layout_width="220dp"
         android:layout_height="wrap_content"
         android:background="#D7F1EAA8"
-        android:fontFamily="@font/berkshireswashregular"
+        android:fontFamily="@font/font1"
         android:gravity="center|center_vertical"
         android:text="@string/bukley"
         android:textColor="#E95A8A"

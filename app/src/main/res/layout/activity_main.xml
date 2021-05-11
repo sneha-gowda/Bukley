@@ -12,7 +12,7 @@
         android:id="@+id/Bukley"
         android:layout_width="214dp"
         android:layout_height="67dp"
-        android:fontFamily="@font/berkshireswashregular"
+        android:fontFamily="@font/font1"
         android:gravity="center|center_vertical"
         android:text="@string/bukley"
         android:textColor="#E95A8A"

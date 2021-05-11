@@ -7,6 +7,6 @@
     <font
         android:fontStyle="italic"
         android:fontWeight="400"
-        android:font="@font/berkshireswashregular" />
+        android:font="@font/font1" />
 
 </font-family>

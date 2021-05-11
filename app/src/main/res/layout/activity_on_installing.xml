@@ -14,7 +14,7 @@
         style="@style/Widget.AppCompat.TextView.SpinnerItem"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:fontFamily="@font/berkshireswashregular"
+        android:fontFamily="@font/font1"
         android:text="Welcome to Bukley!!!"
         android:textColor="#5DCBDA"
         android:textColorHighlight="#1FF127"

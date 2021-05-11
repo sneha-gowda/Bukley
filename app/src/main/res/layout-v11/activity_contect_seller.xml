@@ -26,7 +26,7 @@
             android:layout_width="140dp"
             android:layout_height="155dp"
             android:layout_marginTop="20dp"
-            android:background="#FD140101"
+            android:background="#EB140F0F"
             app:srcCompat="@drawable/bookcover" />
 
         <TextView
