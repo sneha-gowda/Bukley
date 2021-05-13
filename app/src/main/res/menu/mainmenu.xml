@@ -4,6 +4,24 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     tools:context=".Activity.Main2Activity">
 
+    <item android:id="@+id/search"
+        android:title="Search"
+        android:icon="@drawable/ic_search"
+        app:showAsAction="ifRoom"
+        app:actionViewClass="android.widget.SearchView"
+        >
+    </item>
+
+    <item android:id="@+id/mycollege"
+        android:title="Books in my College"
+        android:icon="@drawable/ic_college"
+        app:showAsAction="collapseActionView|ifRoom"/>
+
+    <item android:id="@+id/mybooks"
+        android:title="My books"
+        app:showAsAction="never"
+        tools:ignore="HardcodedText"/>
+
     <item android:id="@+id/Login"
         android:title="Login"
         app:showAsAction="never"

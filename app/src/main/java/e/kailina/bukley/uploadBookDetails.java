@@ -143,11 +143,10 @@ public class uploadBookDetails extends AppCompatActivity {
 
     public void uploadBoodDetails(View v){
 
-        String b_name=bookName.getText().toString().trim();
+        final String b_name=bookName.getText().toString().trim();
         String A_name=bookAuthor.getText().toString().trim();
         String E_name=bookEdition.getText().toString().trim();
         final String B_price=price.getText().toString().trim();
-
 
         FirebaseDatabase.getInstance().getReference().child("User").child(userId).child("User_Data").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
@@ -156,13 +155,11 @@ public class uploadBookDetails extends AppCompatActivity {
                     Log.e("firebase", "Error getting data", task.getException());
                 }
                 else {
-                    Log.d("firebase", "blabla");
                     String S_name=task.getResult().child("User_name").getValue().toString();
                     String S_mail=task.getResult().child("User_mail").getValue().toString();
                     String S_phone=task.getResult().child("User_phone").getValue().toString();
-                    book.setS_name(S_name); book.setS_mail(S_mail);book.setS_phone(S_phone);
-//                    Toast.makeText(uploadBookDetails.this,S_name,Toast.LENGTH_LONG).show();
-
+                    String College=task.getResult().child("User_college").getValue().toString();
+                    book.setS_name(S_name); book.setS_mail(S_mail);book.setS_phone(S_phone);book.setCollege(College);
                 }
             }
         });
@@ -186,7 +183,6 @@ public class uploadBookDetails extends AppCompatActivity {
                 book=new Book(b_name,A_name,E_name,B_price,category);
                 uploadToFireBase();
             }
-
         }
         else{
             Toast.makeText(uploadBookDetails.this,"Please provide book image",Toast.LENGTH_LONG).show();
@@ -198,7 +194,7 @@ public class uploadBookDetails extends AppCompatActivity {
     public void uploadToFireBase(){
         progressbar.setVisibility(View.VISIBLE);
         final FirebaseStorage storage=FirebaseStorage.getInstance();
-        final StorageReference storageReference=storage.getReference(userId+"/Books"+bookName.getText().toString().trim());
+        final StorageReference storageReference=storage.getReference(userId+"/Books"+bookName.getText().toString().toLowerCase().trim());
         storageReference.putFile(imagePath).
                 addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
@@ -213,7 +209,7 @@ public class uploadBookDetails extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 progressbar.setVisibility(View.INVISIBLE);
-                Toast.makeText(uploadBookDetails.this,"Failed to connect try again",Toast.LENGTH_SHORT).show();
+                Toast.makeText(uploadBookDetails.this,"Failed to connect, try again",Toast.LENGTH_SHORT).show();
             }
         }).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -230,7 +226,7 @@ public class uploadBookDetails extends AppCompatActivity {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(uploadBookDetails.this,"failer to get url",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(uploadBookDetails.this,"Network error",Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -240,7 +236,7 @@ public class uploadBookDetails extends AppCompatActivity {
 
     public void uploadToRealTimeDatabase(){
         final FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
-        final DatabaseReference databaseReference=firebaseDatabase.getReference("User"+"/").child(userId+"/Books/"+book.B_name);
+        final DatabaseReference databaseReference=firebaseDatabase.getReference("User"+"/").child(userId+"/Books/"+book.B_name.toLowerCase());
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -252,6 +248,8 @@ public class uploadBookDetails extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
+                        Intent gotoMain=new Intent(getApplicationContext(),Main2Activity.class);
+                        startActivity(gotoMain);
                     }
                 });
                 androidx.appcompat.app.AlertDialog alertDialog=dialog.create();
@@ -264,11 +262,11 @@ public class uploadBookDetails extends AppCompatActivity {
 
             }
         });
-        final DatabaseReference imageReference=firebaseDatabase.getReference("Images"+"/").child(book.B_name);
-        imageReference.addValueEventListener(new ValueEventListener() {
+        final DatabaseReference databaseReference2=firebaseDatabase.getReference("Books"+"/").child(book.B_name.toLowerCase());
+        databaseReference2.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                imageReference.setValue(book);
+                databaseReference2.setValue(book);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

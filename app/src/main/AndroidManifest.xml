@@ -17,12 +17,19 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-
+        <activity android:name=".recycleViewAdapter3"></activity>
+        <activity
+            android:name=".MyCollege"
+            android:parentActivityName=".Main2Activity"
+            android:theme="@style/TitleBar" />
+        <activity
+            android:name=".MyBooks"
+            android:parentActivityName=".Main2Activity"
+            android:theme="@style/TitleBar" />
         <activity
             android:name=".ContectSeller"
             android:parentActivityName=".Main2Activity"
-            android:theme="@style/TitleBar"/>
-
+            android:theme="@style/TitleBar" />
         <activity
             android:name=".uploadBookDetails"
             android:parentActivityName=".Main2Activity"
@@ -46,6 +53,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

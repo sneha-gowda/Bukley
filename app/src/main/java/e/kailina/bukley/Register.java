@@ -50,14 +50,14 @@ public class Register extends AppCompatActivity {
             public void onClick(View v) {
                 final String User_name=name.getText().toString().trim();
                 final String User_email=email.getText().toString().trim();
-                final String User_college=college.getText().toString().trim();
+                final String User_college=college.getText().toString().toUpperCase().trim();
                 final String User_phone=phone.getText().toString().trim();
                 String User_password=password.getText().toString().trim() ;
                 if(TextUtils.isEmpty(User_name)){
                     name.setError("Please enter name");
                 }
-                else if(TextUtils.isEmpty(User_college)){
-                    college.setError("Please enter College name");
+                else if(TextUtils.isEmpty(User_college)|| User_college.length()>7){
+                    college.setError("Please enter College name in short form i.e SJCIT");
                 }
                 else if(TextUtils.isEmpty(User_phone)||User_phone.length()<10 || User_phone.length()>10){
                     phone.setError("Please enter valid phone number");

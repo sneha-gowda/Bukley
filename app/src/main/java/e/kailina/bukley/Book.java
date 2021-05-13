@@ -3,8 +3,8 @@ package e.kailina.bukley;
 public class Book {
     String B_name, B_author,B_edition,B_price,B_category;
     String image_path;
-    String S_name;
-    String S_mail,S_phone;
+    String S_name,S_mail,S_phone;
+    String College;
 
     public  Book(){}
     public Book(String B_name, String B_author, String B_edition, String B_price, String B_category){
@@ -88,5 +88,13 @@ public class Book {
 
     public void setS_phone(String s_phone) {
         S_phone = s_phone;
+    }
+
+    public String getCollege() {
+        return College;
+    }
+
+    public void setCollege(String college) {
+        College = college;
     }
 }

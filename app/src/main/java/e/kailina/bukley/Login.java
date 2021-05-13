@@ -76,6 +76,8 @@ public class Login extends AppCompatActivity {
                             else{
                                 AlertDialog.Builder dialog=new AlertDialog.Builder(Login.this);
                                 dialog.setMessage("Email ID or password is invalid");
+                                login_email.setText("");
+                                login_password.setText("");
                                 dialog.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
