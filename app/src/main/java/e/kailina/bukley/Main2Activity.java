@@ -26,6 +26,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.core.OnlineState;
 
 import java.util.ArrayList;
 
@@ -44,6 +45,18 @@ public class Main2Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+        if(!isOnline()){
+            AlertDialog.Builder alert=new AlertDialog.Builder(Main2Activity.this);
+            alert.setMessage("Please enable internet to load book's details");
+            alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            alert.create();
+            alert.show();
+        }
 
         recyclerView=findViewById(R.id.recyclerView);
         GridLayoutManager gridLayoutManager=new GridLayoutManager(Main2Activity.this,2);
@@ -266,5 +279,19 @@ public class Main2Activity extends AppCompatActivity {
         }
         return true;
     }
+// Check internet
+    boolean isOnline() {
+        Runtime runtime = Runtime.getRuntime();
+        try {
+            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+            int exitValue = ipProcess.waitFor();
+            return (exitValue == 0);
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+
+    }
 }
