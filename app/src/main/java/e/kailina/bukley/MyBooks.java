@@ -1,11 +1,15 @@
 package e.kailina.bukley;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -47,18 +51,39 @@ public class MyBooks extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ClearAll();
-                for(DataSnapshot snapshot1:snapshot.getChildren()) {
-                    downloadBooks details=new downloadBooks();
-                    details.setBookname(snapshot1.child("b_name").getValue().toString());
-                    details.setPrice("Rs "+snapshot1.child("b_price").getValue().toString());
-                    details.setImageUrl(snapshot1.child("image_path").getValue().toString());
-                    details.setAuthor(snapshot1.child("b_author").getValue().toString());
-                    details.setEdition(snapshot1.child("b_edition").getValue().toString());
-                    mybooks.add(details);
+                if(!snapshot.exists()&& !isFinishing()){
+                    final AlertDialog.Builder alert=new AlertDialog.Builder(MyBooks.this);
+                    alert.setMessage("Your books list is empty,to add some books click on 'Add' ");
+                    alert.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent gotoUpload=new Intent(getApplicationContext(),uploadBookDetails.class);
+                            startActivity(gotoUpload);
+                        }
+                    });
+                    alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    alert.create();
+                    alert.show();
                 }
-                recycleViewAdapter2=new recycleViewAdapter2(getApplicationContext(),mybooks);
-                recyclerView.setAdapter(recycleViewAdapter2);
-                recycleViewAdapter2.notifyDataSetChanged();
+                else{
+                    for(DataSnapshot snapshot1:snapshot.getChildren()) {
+                        downloadBooks details=new downloadBooks();
+                        details.setBookname(snapshot1.child("b_name").getValue().toString());
+                        details.setPrice("Rs "+snapshot1.child("b_price").getValue().toString());
+                        details.setImageUrl(snapshot1.child("image_path").getValue().toString());
+                        details.setAuthor(snapshot1.child("b_author").getValue().toString());
+                        details.setEdition(snapshot1.child("b_edition").getValue().toString());
+                        mybooks.add(details);
+                    }
+                    recycleViewAdapter2=new recycleViewAdapter2(getApplicationContext(),mybooks);
+                    recyclerView.setAdapter(recycleViewAdapter2);
+                    recycleViewAdapter2.notifyDataSetChanged();
+                }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -75,4 +100,5 @@ public class MyBooks extends AppCompatActivity {
         }
         mybooks=new ArrayList<>();
     }
+
 }

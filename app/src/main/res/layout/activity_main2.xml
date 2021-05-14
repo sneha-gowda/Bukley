@@ -9,13 +9,14 @@
 
     <Button
         android:id="@+id/uploadImage"
-        style="@android:style/Widget.Material.Light.Button.Inset"
+        style="@android:style/Widget.Holo.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:background="#688A8F"
+        android:background="#E91E63"
         android:gravity="center_horizontal|center_vertical"
         android:text="+"
+        android:textColor="#F20A0101"
         android:textSize="36sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

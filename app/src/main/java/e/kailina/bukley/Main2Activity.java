@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -202,7 +203,9 @@ public class Main2Activity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.search:
+            case R.id.profile:
+                Intent gotoProfile=new Intent(getApplicationContext(), MyProfile.class);
+                startActivity(gotoProfile);
                 return true;
             case R.id.mycollege:
                 Intent gotoMyCollege=new Intent(getApplicationContext(), MyCollege.class);
@@ -246,9 +249,10 @@ public class Main2Activity extends AppCompatActivity {
             hideMyBooks.setVisible(true);
             MenuItem hideCollege=menu.findItem(R.id.mycollege);
             hideCollege.setVisible(true);
+            MenuItem hideProfile=menu.findItem(R.id.profile);
+            hideProfile.setVisible(true);
         }
         else{
-
             MenuItem showLogin=menu.findItem(R.id.Login);
             showLogin.setVisible(true);
             MenuItem hideLogout=menu.findItem(R.id.Logout);
@@ -257,6 +261,8 @@ public class Main2Activity extends AppCompatActivity {
             hideMyBooks.setVisible(false);
             MenuItem hideCollege=menu.findItem(R.id.mycollege);
             hideCollege.setVisible(false);
+            MenuItem hideProfile=menu.findItem(R.id.profile);
+            hideProfile.setVisible(false);
         }
         return true;
     }

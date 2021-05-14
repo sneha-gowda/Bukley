@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="#ECB0C4"
+    tools:context=".MyProfile">
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center|center_horizontal|center_vertical"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/Pname"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.284">
+
+        <TextView
+            android:id="@+id/Bukley"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="40dp"
+            android:background="#D7F1EAA8"
+            android:fontFamily="@font/font1"
+            android:gravity="center|center_horizontal"
+            android:text="@string/bukley"
+            android:textColor="@color/textcolor"
+            android:textSize="45sp"
+            android:textStyle="normal" />
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="362dp"
+        android:layout_height="397dp"
+        android:layout_marginBottom="40dp"
+        android:background="@color/appMainColor"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
+
+
+        <TextView
+            android:id="@+id/Pname"
+            style="@style/Widget.AppCompat.TextView.SpinnerItem"
+            android:layout_width="211dp"
+            android:layout_height="44dp"
+            android:layout_marginBottom="44dp"
+            android:text="Name"
+            android:textSize="24sp"
+            android:textStyle="normal|bold"
+            app:layout_constraintBottom_toTopOf="@+id/Pcollege"
+            app:layout_constraintEnd_toEndOf="@+id/Pcollege"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/Pcollege" />
+
+        <ImageView
+            android:id="@+id/imageView9"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="#A98E6FC5"
+            app:layout_constraintBottom_toTopOf="@+id/imageView11"
+            app:layout_constraintEnd_toStartOf="@+id/Pname"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/imageView10"
+            app:layout_constraintTop_toTopOf="@+id/Pname"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/ic_person" />
+
+        <TextView
+            android:id="@+id/Pcollege"
+            android:layout_width="211dp"
+            android:layout_height="44dp"
+            android:layout_marginBottom="44dp"
+            android:text="College"
+            android:textSize="24dp"
+            app:layout_constraintBottom_toTopOf="@+id/Pphone"
+            app:layout_constraintEnd_toEndOf="@+id/Pphone"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/Pphone" />
+
+        <ImageView
+            android:id="@+id/imageView11"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="#A98E6FC5"
+            app:layout_constraintBottom_toTopOf="@+id/imageView10"
+            app:layout_constraintEnd_toEndOf="@+id/imageView10"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/imageView10"
+            app:layout_constraintTop_toTopOf="@+id/Pcollege"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/ic_college" />
+
+        <TextView
+            android:id="@+id/Pphone"
+            style="@style/Widget.AppCompat.TextView.SpinnerItem"
+            android:layout_width="211dp"
+            android:layout_height="44dp"
+            android:layout_marginBottom="44dp"
+            android:text="Phone"
+            android:textSize="24dp"
+            app:layout_constraintBottom_toTopOf="@+id/Pmail"
+            app:layout_constraintEnd_toEndOf="@+id/Pmail"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/Pmail" />
+
+        <ImageView
+            android:id="@+id/imageView10"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="48dp"
+            android:background="#A98E6FC5"
+            app:layout_constraintBottom_toTopOf="@+id/imageView12"
+            app:layout_constraintEnd_toEndOf="@+id/imageView12"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/imageView12"
+            app:layout_constraintTop_toTopOf="@+id/Pphone"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/ic_phone" />
+
+        <TextView
+            android:id="@+id/Pmail"
+            style="@style/Widget.AppCompat.TextView.SpinnerItem"
+            android:layout_width="211dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="56dp"
+            android:text="Mail"
+            android:textSize="18dp"
+            android:textStyle="italic"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.801"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageView12"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="40dp"
+            android:background="#A98E6FC5"
+            app:layout_constraintBottom_toBottomOf="@+id/Pmail"
+            app:layout_constraintEnd_toStartOf="@+id/Pmail"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/Pmail"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/ic_email" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

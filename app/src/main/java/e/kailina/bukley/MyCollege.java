@@ -27,8 +27,7 @@ public class MyCollege extends AppCompatActivity {
     RecyclerView recyclerView;
     private DatabaseReference databaseReference;
     private ArrayList<downloadBooks> bookDetails2;
-    private recycleViewAdapter3 recycleViewAdapter_3;
-    String college;
+    private recycleViewAdapter recycleViewAdapter_3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,17 +48,18 @@ public class MyCollege extends AppCompatActivity {
                      Toast.makeText(getApplicationContext(),"im fassu im mad and i eat gu",Toast.LENGTH_LONG).show();
                 }
                  else{
-                     college=task.getResult().child("User_college").getValue().toString();
+                     final  String college=task.getResult().child("User_college").getValue().toString();
+                     GetDataFromFireBase(college);
                  }
             }
         });
         ClearAll();
-        GetDataFromFireBase();
+
     }
-    public void GetDataFromFireBase(){
+    public void GetDataFromFireBase(final String college){
         Query query =databaseReference.child("Books");
 
-        query.addValueEventListener(new ValueEventListener() {
+        query.orderByChild("college").equalTo(college).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ClearAll();
@@ -75,7 +75,7 @@ public class MyCollege extends AppCompatActivity {
                     details.setS_phone(snapshot1.child("s_phone").getValue().toString());
                     bookDetails2.add(details);
                 }
-                recycleViewAdapter_3=new recycleViewAdapter3(getApplicationContext(),bookDetails2);
+                recycleViewAdapter_3=new recycleViewAdapter(getApplicationContext(),bookDetails2);
                 recyclerView.setAdapter(recycleViewAdapter_3);
                 recycleViewAdapter_3.notifyDataSetChanged();
             }

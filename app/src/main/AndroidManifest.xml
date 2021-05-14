@@ -17,7 +17,10 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".recycleViewAdapter3"></activity>
+        <activity android:name=".MyProfile"
+            android:parentActivityName=".Main2Activity"
+            android:theme="@style/TitleBar"/>
+
         <activity
             android:name=".MyCollege"
             android:parentActivityName=".Main2Activity"

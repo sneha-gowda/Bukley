@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="275dp"
     android:layout_margin="20dp"
     android:background="#E2A9A9"
     android:gravity="center"
@@ -72,6 +72,15 @@
                 android:text="Price"
                 android:textColor="#F3EE1717"
                 android:textSize="18dp" />
+
+            <Button
+                android:id="@+id/delete"
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:layout_margin="10dp"
+                android:background="#F13B3B"
+                android:text="delete"
+                android:textColorLink="#00C56767" />
         </LinearLayout>
 
     </LinearLayout>
