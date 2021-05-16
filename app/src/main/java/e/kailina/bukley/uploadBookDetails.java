@@ -18,6 +18,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -38,6 +39,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -45,6 +48,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Random;
 
 public class uploadBookDetails extends AppCompatActivity {
     Uri imagePath;
@@ -56,7 +60,9 @@ public class uploadBookDetails extends AppCompatActivity {
     ProgressBar progressbar;
     String URL;
     Book book;
+    Button submit;
     String userId= FirebaseAuth.getInstance().getCurrentUser().getUid();
+    Random random;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +74,7 @@ public class uploadBookDetails extends AppCompatActivity {
         selectCategory=findViewById(R.id.selectCategory) ;
         price=findViewById(R.id.Price);
         progressbar=findViewById(R.id.progressBar3);
+        submit=findViewById(R.id.uploadDetails);
     }
 
 
@@ -128,7 +135,6 @@ public class uploadBookDetails extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 category=selectedoption[which];
-                Toast.makeText(uploadBookDetails.this,"selected option: "+selectedoption[which],Toast.LENGTH_LONG).show();
             }
         });
         builder.setPositiveButton("Select", new DialogInterface.OnClickListener() {
@@ -136,33 +142,15 @@ public class uploadBookDetails extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
             }
         });
-        builder.setNegativeButton("Cancel", null);
         AlertDialog dialog = builder.create();
         dialog.show();
     }
 
     public void uploadBoodDetails(View v){
-
         final String b_name=bookName.getText().toString().trim();
         String A_name=bookAuthor.getText().toString().trim();
         String E_name=bookEdition.getText().toString().trim();
         final String B_price=price.getText().toString().trim();
-
-        FirebaseDatabase.getInstance().getReference().child("User").child(userId).child("User_Data").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    String S_name=task.getResult().child("User_name").getValue().toString();
-                    String S_mail=task.getResult().child("User_mail").getValue().toString();
-                    String S_phone=task.getResult().child("User_phone").getValue().toString();
-                    String College=task.getResult().child("User_college").getValue().toString();
-                    book.setS_name(S_name); book.setS_mail(S_mail);book.setS_phone(S_phone);book.setCollege(College);
-                }
-            }
-        });
         if(imagePath!=null){
             if(TextUtils.isEmpty(b_name)){
                 bookName.setError("Please enter book name");
@@ -177,20 +165,32 @@ public class uploadBookDetails extends AppCompatActivity {
                 price.setError("Please enter book price");
             }
             else if(TextUtils.isEmpty(category)){
-                Toast.makeText(uploadBookDetails.this,"Please select book category",Toast.LENGTH_SHORT).show();
+                selectCategory.setError("Please select category");
             }
             else{
                 book=new Book(b_name,A_name,E_name,B_price,category);
+                FirebaseDatabase.getInstance().getReference().child("User").child(userId).child("User_Data").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if (!task.isSuccessful()) {
+                            Log.e("firebase", "Error getting data", task.getException());
+                        }
+                        else {
+                            String S_name=task.getResult().child("User_name").getValue().toString();
+                            String S_mail=task.getResult().child("User_mail").getValue().toString();
+                            String S_phone=task.getResult().child("User_phone").getValue().toString();
+                            String College=task.getResult().child("User_college").getValue().toString();
+                            book.setS_name(S_name); book.setS_mail(S_mail);book.setS_phone(S_phone);book.setCollege(College);
+                        }
+                    }
+                });
                 uploadToFireBase();
             }
         }
         else{
-            Toast.makeText(uploadBookDetails.this,"Please provide book image",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"please provide book image",Toast.LENGTH_LONG).show();
         }
     }
-
-
-
     public void uploadToFireBase(){
         progressbar.setVisibility(View.VISIBLE);
         final FirebaseStorage storage=FirebaseStorage.getInstance();
@@ -237,40 +237,52 @@ public class uploadBookDetails extends AppCompatActivity {
     public void uploadToRealTimeDatabase(){
         final FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance();
         final DatabaseReference databaseReference=firebaseDatabase.getReference("User"+"/").child(userId+"/Books/"+book.B_name.toLowerCase());
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 databaseReference.setValue(book);
-                progressbar.setVisibility(View.INVISIBLE);
-                androidx.appcompat.app.AlertDialog.Builder dialog=new androidx.appcompat.app.AlertDialog.Builder(uploadBookDetails.this);
-                dialog.setMessage("Uploaded Successefully");
-                dialog.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                        Intent gotoMain=new Intent(getApplicationContext(),Main2Activity.class);
-                        startActivity(gotoMain);
-                    }
-                });
-                androidx.appcompat.app.AlertDialog alertDialog=dialog.create();
-                alertDialog.show();
+                uploadtofirestore1();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 progressbar.setVisibility(View.INVISIBLE);
                 Toast.makeText(uploadBookDetails.this,"Failed to Upload, Try again",Toast.LENGTH_LONG).show();
+            }
+        });}
+        void uploadtofirestore1(){
 
-            }
-        });
-        final DatabaseReference databaseReference2=firebaseDatabase.getReference("Books"+"/").child(book.B_name.toLowerCase());
-        databaseReference2.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                databaseReference2.setValue(book);
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
-    }
+            FirebaseFirestore db=FirebaseFirestore.getInstance();
+            String unique=bookName.getText().toString()+String.valueOf(FirebaseAuth.getInstance().getUid());
+            db.collection("Books").document(unique).set(book).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    UploadtofireStroe2();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getApplicationContext(),"Network error",Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+        void UploadtofireStroe2(){
+        FirebaseFirestore db=FirebaseFirestore.getInstance();
+            db.collection(userId).document(bookName.getText().toString()).set(book).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    progressbar.setVisibility(View.INVISIBLE);
+                    Toast.makeText(getApplicationContext(),"Uploaded Successfully",Toast.LENGTH_LONG).show();
+                    Intent gotoMain = new Intent(getApplicationContext(), Main2Activity.class);
+                    startActivity(gotoMain);
+                    finish();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+
 }
+

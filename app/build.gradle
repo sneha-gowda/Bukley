@@ -40,4 +40,13 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 
+    implementation 'com.firebaseui:firebase-ui-database:5.0.0'
+    //add firebase ui recyclerview dependency
+    implementation 'com.google.firebase:firebase-core:17.2.2' // adding firebase core dependency
+    implementation 'com.google.android.material:material:1.2.0-alpha02'
+    //material design for RecycleView
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    // picasso library dependencies to show image in imageView
+
+
 }

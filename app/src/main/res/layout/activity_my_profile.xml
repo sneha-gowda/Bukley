@@ -14,12 +14,10 @@
         android:layout_height="wrap_content"
         android:gravity="center|center_horizontal|center_vertical"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/Pname"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.284">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/Bukley"
@@ -37,14 +35,16 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
-        android:layout_width="362dp"
+        android:layout_width="wrap_content"
         android:layout_height="397dp"
         android:layout_marginBottom="40dp"
-        android:background="@color/appMainColor"
+        android:background="#EDEFF0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.489"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
+        app:layout_constraintVertical_bias="0.0">
 
 
         <TextView
@@ -76,6 +76,7 @@
 
         <TextView
             android:id="@+id/Pcollege"
+            style="@style/Widget.AppCompat.TextView.SpinnerItem"
             android:layout_width="211dp"
             android:layout_height="44dp"
             android:layout_marginBottom="44dp"
@@ -93,7 +94,7 @@
             android:background="#A98E6FC5"
             app:layout_constraintBottom_toTopOf="@+id/imageView10"
             app:layout_constraintEnd_toEndOf="@+id/imageView10"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="@+id/imageView10"
             app:layout_constraintTop_toTopOf="@+id/Pcollege"
             app:layout_constraintVertical_bias="0.0"
@@ -129,29 +130,27 @@
         <TextView
             android:id="@+id/Pmail"
             style="@style/Widget.AppCompat.TextView.SpinnerItem"
-            android:layout_width="211dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="56dp"
+            android:layout_marginBottom="64dp"
             android:text="Mail"
             android:textSize="18dp"
             android:textStyle="italic"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.801"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintHorizontal_bias="0.502"
+            app:layout_constraintStart_toEndOf="@+id/imageView12" />
 
         <ImageView
             android:id="@+id/imageView12"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginEnd="40dp"
+            android:layout_marginStart="40dp"
             android:background="#A98E6FC5"
             app:layout_constraintBottom_toBottomOf="@+id/Pmail"
-            app:layout_constraintEnd_toStartOf="@+id/Pmail"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/Pmail"
-            app:layout_constraintVertical_bias="0.0"
+            app:layout_constraintVertical_bias="0.538"
             app:srcCompat="@drawable/ic_email" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

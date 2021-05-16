@@ -33,7 +33,7 @@
         tools:ignore="HardcodedText" />
 
     <item android:id="@+id/getInTouch"
-        android:title="Mai lUs"
+        android:title="Contact Us"
         app:showAsAction="never"
         tools:ignore="HardcodedText" />
 

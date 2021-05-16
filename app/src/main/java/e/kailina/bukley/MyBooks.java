@@ -10,7 +10,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -19,6 +23,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -26,7 +34,7 @@ public class MyBooks extends AppCompatActivity {
 
     RecyclerView recyclerView;
     recycleViewAdapter2 recycleViewAdapter2;
-    ArrayList<downloadBooks> mybooks;
+    ArrayList<Book> mybooks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +44,7 @@ public class MyBooks extends AppCompatActivity {
         recyclerView=findViewById(R.id.recyclerView2);
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setHasFixedSize(true);
+        recyclerView.setHasFixedSize(false);
         mybooks=new ArrayList<>();
 
         ClearAll();
@@ -45,49 +53,33 @@ public class MyBooks extends AppCompatActivity {
     }
 
     public void GetDataFromFireBase(){
+        //Toast.makeText(getApplicationContext(),"sdjkfhkadsjf",Toast.LENGTH_LONG).show();
         String Uid= FirebaseAuth.getInstance().getUid();
-        Query query = FirebaseDatabase.getInstance().getReference().child("User").child(Uid).child("Books");
-        query.addValueEventListener(new ValueEventListener() {
+        FirebaseFirestore db= FirebaseFirestore.getInstance();
+        db.collection(Uid).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ClearAll();
-                if(!snapshot.exists()&& !isFinishing()){
-                    final AlertDialog.Builder alert=new AlertDialog.Builder(MyBooks.this);
-                    alert.setMessage("Your books list is empty,to add some books click on 'Add' ");
-                    alert.setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent gotoUpload=new Intent(getApplicationContext(),uploadBookDetails.class);
-                            startActivity(gotoUpload);
-                        }
-                    });
-                    alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
-                    alert.create();
-                    alert.show();
-                }
-                else{
-                    for(DataSnapshot snapshot1:snapshot.getChildren()) {
-                        downloadBooks details=new downloadBooks();
-                        details.setBookname(snapshot1.child("b_name").getValue().toString());
-                        details.setPrice("Rs "+snapshot1.child("b_price").getValue().toString());
-                        details.setImageUrl(snapshot1.child("image_path").getValue().toString());
-                        details.setAuthor(snapshot1.child("b_author").getValue().toString());
-                        details.setEdition(snapshot1.child("b_edition").getValue().toString());
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful() ){
+                    if( task.getResult()!=null)
+                    {
+                        for(QueryDocumentSnapshot snapshot1: task.getResult()){
+                       Book details=(snapshot1.toObject(Book.class));
                         mybooks.add(details);
+                        }
+                        recycleViewAdapter2=new recycleViewAdapter2(getApplicationContext(),mybooks);
+                        recyclerView.setAdapter(recycleViewAdapter2);
+                        recycleViewAdapter2.notifyDataSetChanged();
                     }
-                    recycleViewAdapter2=new recycleViewAdapter2(getApplicationContext(),mybooks);
-                    recyclerView.setAdapter(recycleViewAdapter2);
-                    recycleViewAdapter2.notifyDataSetChanged();
+                    else{
+                    Toast.makeText(getApplicationContext(),"You have no books to show", Toast.LENGTH_LONG).show();
+                    }
                 }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(),"Network error",Toast.LENGTH_LONG).show();
             }
         });
     }

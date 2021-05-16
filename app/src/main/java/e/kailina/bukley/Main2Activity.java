@@ -7,10 +7,10 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,6 +19,9 @@ import android.widget.Button;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,7 +29,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.core.OnlineState;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -38,30 +43,22 @@ public class Main2Activity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     private DatabaseReference databaseReference;
-    private ArrayList<downloadBooks> bookDetails;
+    private ArrayList<Book> bookDetails;
     private recycleViewAdapter recycleViewAdapter;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-        if(!isOnline()){
-            AlertDialog.Builder alert=new AlertDialog.Builder(Main2Activity.this);
-            alert.setMessage("Please enable internet to load book's details");
-            alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
-            alert.create();
-            alert.show();
-        }
+        progressDialog=new ProgressDialog(getApplicationContext());
+        progressDialog.setMessage("Loading");
+        //progressDialog.show();
 
         recyclerView=findViewById(R.id.recyclerView);
         GridLayoutManager gridLayoutManager=new GridLayoutManager(Main2Activity.this,2);
         recyclerView.setLayoutManager(gridLayoutManager);
-        recyclerView.setHasFixedSize(true);
+        recyclerView.setHasFixedSize(false);
         databaseReference= FirebaseDatabase.getInstance().getReference();
         bookDetails=new ArrayList<>();
         ClearAll();
@@ -98,33 +95,27 @@ public class Main2Activity extends AppCompatActivity {
 // INTERACTION WITH DATABASE FOR RECYCLE VIEW
 
     public void GetDataFromFireBase(){
-        Query query =databaseReference.child("Books");
-        query.addValueEventListener(new ValueEventListener() {
+        FirebaseFirestore db =FirebaseFirestore.getInstance();
+        db.collection("Books").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ClearAll();
-                for(DataSnapshot snapshot1:snapshot.getChildren()) {
-                    downloadBooks details=new downloadBooks();
-                    details.setBookname(snapshot1.child("b_name").getValue().toString());
-                    details.setPrice("Rs "+snapshot1.child("b_price").getValue().toString());
-                    details.setImageUrl(snapshot1.child("image_path").getValue().toString());
-                    details.setAuthor(snapshot1.child("b_author").getValue().toString());
-                    details.setEdition(snapshot1.child("b_edition").getValue().toString());
-                    details.setS_name(snapshot1.child("s_name").getValue().toString());
-                    details.setS_mail(snapshot1.child("s_mail").getValue().toString());
-                    details.setS_phone(snapshot1.child("s_phone").getValue().toString());
-                    bookDetails.add(details);
-                }
-                recycleViewAdapter=new recycleViewAdapter(getApplicationContext(),bookDetails);
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot snapshot1: task.getResult()){
+                        Book details=(snapshot1.toObject(Book.class));
+                        bookDetails.add(details);
+                    }
+                    recycleViewAdapter=new recycleViewAdapter(getApplicationContext(),bookDetails);
                 recyclerView.setAdapter(recycleViewAdapter);
                 recycleViewAdapter.notifyDataSetChanged();
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
+                }
+                else{
+                    progressDialog.dismiss();
+                    Toast.makeText(getApplicationContext(),"Network error",Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
+
     private void ClearAll(){
         if(bookDetails!=null){
             bookDetails.clear();
@@ -167,22 +158,28 @@ public class Main2Activity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference().child("Books").child(query.toLowerCase());
-                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                FirebaseFirestore db =FirebaseFirestore.getInstance();
+                String query2=query.toLowerCase();
+                Toast.makeText(getApplicationContext(),"ccamehere",Toast.LENGTH_LONG).show();
+                db.collection("Books").whereEqualTo("b_name",query2).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if(snapshot.exists()){
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful() && task.getResult()!=null){
                             Intent gotoContactSeller =new Intent( getApplicationContext(), ContectSeller.class);
                             gotoContactSeller.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            gotoContactSeller.putExtra("BookName",snapshot.child("b_name").getValue().toString());
-                            gotoContactSeller.putExtra("BookAuthor",snapshot.child("b_author").getValue().toString());
-                            gotoContactSeller.putExtra("BookEdition",snapshot.child("b_edition").getValue().toString());
-                            gotoContactSeller.putExtra("BookPrice",snapshot.child("b_price").getValue().toString());
-                            gotoContactSeller.putExtra("ImageUrl",snapshot.child("image_path").getValue().toString());
-                            gotoContactSeller.putExtra("S_name",snapshot.child("s_name").getValue().toString());
-                            gotoContactSeller.putExtra("S_mail",snapshot.child("s_mail").getValue().toString());
-                            gotoContactSeller.putExtra("S_phone",snapshot.child("s_phone").getValue().toString());
-                            getApplicationContext().startActivity(gotoContactSeller);
+                            for(QueryDocumentSnapshot snapshot1: task.getResult()) {
+                                Book details = (snapshot1.toObject(Book.class));
+                                Toast.makeText(getApplicationContext(),"ccamehere",Toast.LENGTH_LONG).show();
+                                gotoContactSeller.putExtra("BookName", details.getB_name().toString());
+                                gotoContactSeller.putExtra("BookAuthor", details.getB_author().toString());
+                                gotoContactSeller.putExtra("BookEdition", details.getB_edition().toString());
+                                gotoContactSeller.putExtra("BookPrice", details.getB_price().toString());
+                                gotoContactSeller.putExtra("ImageUrl", details.getImage_path().toString());
+                                gotoContactSeller.putExtra("S_name", details.getS_name().toString());
+                                gotoContactSeller.putExtra("S_mail", details.getS_mail().toString());
+                                gotoContactSeller.putExtra("S_phone", details.getS_phone().toString());
+                            }
+                           // getApplicationContext().startActivity(gotoContactSeller);
                         }
                         else{
                             AlertDialog.Builder dialog=new AlertDialog.Builder(Main2Activity.this);
@@ -198,11 +195,58 @@ public class Main2Activity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(),"ok fine! lets see whats wrong",Toast.LENGTH_LONG).show();
                         }
                     }
+                }).addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
+                    public void onFailure(@NonNull Exception e) {
+                        AlertDialog.Builder dialog=new AlertDialog.Builder(Main2Activity.this);
+                            dialog.setMessage("Sorry, this book is not available currently ");
+                            dialog.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+                            AlertDialog alertDialog=dialog.create();
+                            alertDialog.show();
+                            Toast.makeText(getApplicationContext(),"ok fine! lets see whats wrong",Toast.LENGTH_LONG).show();
                     }
                 });
+//                DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference().child("Books").child(query.toLowerCase());
+//                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        if(snapshot.exists()){
+//                            Intent gotoContactSeller =new Intent( getApplicationContext(), ContectSeller.class);
+//                            gotoContactSeller.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                            gotoContactSeller.putExtra("BookName",snapshot.child("b_name").getValue().toString());
+//                            gotoContactSeller.putExtra("BookAuthor",snapshot.child("b_author").getValue().toString());
+//                            gotoContactSeller.putExtra("BookEdition",snapshot.child("b_edition").getValue().toString());
+//                            gotoContactSeller.putExtra("BookPrice",snapshot.child("b_price").getValue().toString());
+//                            gotoContactSeller.putExtra("ImageUrl",snapshot.child("image_path").getValue().toString());
+//                            gotoContactSeller.putExtra("S_name",snapshot.child("s_name").getValue().toString());
+//                            gotoContactSeller.putExtra("S_mail",snapshot.child("s_mail").getValue().toString());
+//                            gotoContactSeller.putExtra("S_phone",snapshot.child("s_phone").getValue().toString());
+//                            getApplicationContext().startActivity(gotoContactSeller);
+//                        }
+//                        else{
+//                            AlertDialog.Builder dialog=new AlertDialog.Builder(Main2Activity.this);
+//                            dialog.setMessage("Sorry, this book is not available currently ");
+//                            dialog.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                    dialog.cancel();
+//                                }
+//                            });
+//                            AlertDialog alertDialog=dialog.create();
+//                            alertDialog.show();
+//                            Toast.makeText(getApplicationContext(),"ok fine! lets see whats wrong",Toast.LENGTH_LONG).show();
+//                        }
+//                    }
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
                 return true;
             }
             @Override
@@ -233,7 +277,12 @@ public class Main2Activity extends AppCompatActivity {
                 startActivity(loginActivity1);
                 return true;
             case R.id.getInTouch:
+                Intent contactUs=new Intent(Intent.ACTION_SEND);
+                contactUs.putExtra(Intent.EXTRA_EMAIL,new String[]{"Bukley.info@gmail.com"});
+                contactUs.setType("message/rfc822");
+                startActivity(Intent.createChooser(contactUs, "Choose an Email client :"));
                 return true;
+
             case R.id.sellBook:
                 gotoUploadActivity();
                 return true;
@@ -278,20 +327,5 @@ public class Main2Activity extends AppCompatActivity {
             hideProfile.setVisible(false);
         }
         return true;
-    }
-// Check internet
-    boolean isOnline() {
-        Runtime runtime = Runtime.getRuntime();
-        try {
-            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
-            int exitValue = ipProcess.waitFor();
-            return (exitValue == 0);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return false;
-
     }
 }
