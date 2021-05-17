@@ -7,9 +7,11 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -39,9 +41,9 @@ public class Main2Activity extends AppCompatActivity {
     FirebaseAuth fAuth=FirebaseAuth.getInstance();
 
     RecyclerView recyclerView;
-    private DatabaseReference databaseReference;
     private ArrayList<Book> bookDetails;
     private recycleViewAdapter recycleViewAdapter;
+    DatabaseReference databaseReference;
 
 
     @Override
@@ -49,17 +51,14 @@ public class Main2Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-
-
-
         recyclerView=findViewById(R.id.recyclerView);
         GridLayoutManager gridLayoutManager=new GridLayoutManager(Main2Activity.this,2);
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setHasFixedSize(false);
         databaseReference= FirebaseDatabase.getInstance().getReference();
         bookDetails=new ArrayList<>();
-        ClearAll();
-        GetDataFromFireBase();
+        //ClearAll();
+        //GetDataFromFireBase();
 
         uploadImage=findViewById(R.id.uploadImage);
         if(fAuth.getCurrentUser()!=null && fAuth.getCurrentUser().isEmailVerified()){
@@ -89,14 +88,25 @@ public class Main2Activity extends AppCompatActivity {
         });
     }
 
-// INTERACTION WITH DATABASE FOR RECYCLE VIEW
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ClearAll();
+        GetDataFromFireBase();
+    }
+    // INTERACTION WITH DATABASE FOR RECYCLE VIEW
 
     public void GetDataFromFireBase(){
+
+        final ProgressDialog pd = new ProgressDialog(Main2Activity.this);
+        pd.setMessage("loading");
+        pd.show();
         FirebaseFirestore db =FirebaseFirestore.getInstance();
         db.collection("Books").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
+                    pd.dismiss();
                     for(QueryDocumentSnapshot snapshot1: task.getResult()){
                         Book details=(snapshot1.toObject(Book.class));
                         bookDetails.add(details);
@@ -106,6 +116,7 @@ public class Main2Activity extends AppCompatActivity {
                 recycleViewAdapter.notifyDataSetChanged();
                 }
                 else{
+                    pd.dismiss();
                     Toast.makeText(getApplicationContext(),"Network error",Toast.LENGTH_LONG).show();
                 }
             }

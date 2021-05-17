@@ -36,30 +36,33 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="wrap_content"
-        android:layout_height="397dp"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="40dp"
         android:background="#EDEFF0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.489"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintVertical_bias="0.385">
 
 
         <TextView
             android:id="@+id/Pname"
             style="@style/Widget.AppCompat.TextView.SpinnerItem"
-            android:layout_width="211dp"
-            android:layout_height="44dp"
-            android:layout_marginBottom="44dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="32dp"
             android:text="Name"
             android:textSize="24sp"
             android:textStyle="normal|bold"
             app:layout_constraintBottom_toTopOf="@+id/Pcollege"
             app:layout_constraintEnd_toEndOf="@+id/Pcollege"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/Pcollege" />
+            app:layout_constraintHorizontal_bias="0.25"
+            app:layout_constraintStart_toStartOf="@+id/Pcollege"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
 
         <ImageView
             android:id="@+id/imageView9"
@@ -77,8 +80,8 @@
         <TextView
             android:id="@+id/Pcollege"
             style="@style/Widget.AppCompat.TextView.SpinnerItem"
-            android:layout_width="211dp"
-            android:layout_height="44dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="44dp"
             android:text="College"
             android:textSize="24dp"
@@ -103,8 +106,8 @@
         <TextView
             android:id="@+id/Pphone"
             style="@style/Widget.AppCompat.TextView.SpinnerItem"
-            android:layout_width="211dp"
-            android:layout_height="44dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="44dp"
             android:text="Phone"
             android:textSize="24dp"
@@ -132,7 +135,8 @@
             style="@style/Widget.AppCompat.TextView.SpinnerItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="64dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
             android:text="Mail"
             android:textSize="18dp"
             android:textStyle="italic"
@@ -145,7 +149,7 @@
             android:id="@+id/imageView12"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginStart="40dp"
+            android:layout_marginLeft="20dp"
             android:background="#A98E6FC5"
             app:layout_constraintBottom_toBottomOf="@+id/Pmail"
             app:layout_constraintStart_toStartOf="parent"

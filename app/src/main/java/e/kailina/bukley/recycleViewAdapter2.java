@@ -56,7 +56,6 @@ public class recycleViewAdapter2 extends RecyclerView.Adapter<recycleViewAdapter
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()){
-                            Toast.makeText(context, "Deleted successfully from Book", Toast.LENGTH_LONG).show();
                         }
                         else
                             Toast.makeText(context,"cant delete",Toast.LENGTH_LONG).show();
@@ -91,6 +90,7 @@ public class recycleViewAdapter2 extends RecyclerView.Adapter<recycleViewAdapter
         int position =mybooks.indexOf(book);
         mybooks.remove(position);
         notifyItemRemoved(position);
+
     }
     @Override
     public int getItemCount() {
