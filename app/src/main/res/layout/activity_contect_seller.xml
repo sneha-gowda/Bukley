@@ -27,7 +27,8 @@
             android:layout_height="155dp"
             android:layout_marginTop="20dp"
             android:background="#FD140101"
-            app:srcCompat="@drawable/bookcover" />
+            app:srcCompat="@drawable/bookcover"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/bookname"

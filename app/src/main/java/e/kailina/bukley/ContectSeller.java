@@ -23,14 +23,14 @@ public class ContectSeller extends AppCompatActivity {
 
         Intent getBookDetails=getIntent();
         String bName=getBookDetails.getStringExtra("BookName").toUpperCase();
-        String bAuthor= getString(R.string.author)+getBookDetails.getStringExtra("BookAuthor").toString();
-        String bEdition=getString(R.string.edition)+getBookDetails.getStringExtra("BookEdition").toString();
-        String bPrice=getString(R.string.price)+getBookDetails.getStringExtra("BookPrice").toString();
-        String Url=getBookDetails.getStringExtra("ImageUrl").toString();
+        String bAuthor= getString(R.string.author)+ getBookDetails.getStringExtra("BookAuthor");
+        String bEdition=getString(R.string.edition)+ getBookDetails.getStringExtra("BookEdition");
+        String bPrice=getString(R.string.price)+ getBookDetails.getStringExtra("BookPrice");
+        String Url= getBookDetails.getStringExtra("ImageUrl");
         Uri uri=Uri.parse(Url);
-        String S_name=getBookDetails.getStringExtra("S_name").toString();
-        String S_mail=getBookDetails.getStringExtra("S_mail").toString();
-        String S_phone="phno: "+getBookDetails.getStringExtra("S_phone").toString();
+        String S_name= getBookDetails.getStringExtra("S_name");
+        String S_mail= getBookDetails.getStringExtra("S_mail");
+        String S_phone="phno: "+ getBookDetails.getStringExtra("S_phone");
 
         bookImage=findViewById(R.id.CS_Bimage);
         Glide.with(ContectSeller.this).load(Url).into(bookImage);

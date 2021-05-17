@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -43,15 +42,15 @@ public class Main2Activity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private ArrayList<Book> bookDetails;
     private recycleViewAdapter recycleViewAdapter;
-    ProgressDialog progressDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-        progressDialog=new ProgressDialog(getApplicationContext());
-        progressDialog.setMessage("Loading");
-        //progressDialog.show();
+
+
+
 
         recyclerView=findViewById(R.id.recyclerView);
         GridLayoutManager gridLayoutManager=new GridLayoutManager(Main2Activity.this,2);
@@ -107,7 +106,6 @@ public class Main2Activity extends AppCompatActivity {
                 recycleViewAdapter.notifyDataSetChanged();
                 }
                 else{
-                    progressDialog.dismiss();
                     Toast.makeText(getApplicationContext(),"Network error",Toast.LENGTH_LONG).show();
                 }
             }

@@ -51,6 +51,22 @@ public class recycleViewAdapter2 extends RecyclerView.Adapter<recycleViewAdapter
             @Override
             public void onClick(View v) {
                 FirebaseFirestore db=FirebaseFirestore.getInstance();
+                String unique=bookName+Uid;
+                db.collection("Books").document(unique).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()){
+                            Toast.makeText(context, "Deleted successfully from Book", Toast.LENGTH_LONG).show();
+                        }
+                        else
+                            Toast.makeText(context,"cant delete",Toast.LENGTH_LONG).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(context,"cant delete",Toast.LENGTH_LONG).show();
+                    }
+                });
                 db.collection(Uid).document(bookName).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {

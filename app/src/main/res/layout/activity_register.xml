@@ -112,7 +112,8 @@
         app:layout_constraintStart_toStartOf="@+id/imageView3"
         app:layout_constraintTop_toTopOf="@+id/college"
         app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@drawable/ic_college" />
+        app:srcCompat="@drawable/ic_college"
+        tools:ignore="ContentDescription" />
 
 
     <ImageView

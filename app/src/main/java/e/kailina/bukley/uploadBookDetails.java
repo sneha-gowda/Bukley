@@ -261,7 +261,7 @@ public class uploadBookDetails extends AppCompatActivity {
         void uploadtofirestore1(){
 
             FirebaseFirestore db=FirebaseFirestore.getInstance();
-            String unique=bookName.getText().toString()+String.valueOf(FirebaseAuth.getInstance().getUid());
+            String unique=bookName.getText().toString()+ FirebaseAuth.getInstance().getUid();
             db.collection("Books").document(unique).set(book).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
