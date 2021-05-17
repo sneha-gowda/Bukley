@@ -241,6 +241,15 @@ public class uploadBookDetails extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 databaseReference.setValue(book);
+                firebaseDatabase.getReference().child("Books/"+book.B_name.toLowerCase()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        firebaseDatabase.getReference().child("Books/"+book.B_name.toLowerCase()).setValue(book);
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
                 uploadtofirestore1();
             }
             @Override

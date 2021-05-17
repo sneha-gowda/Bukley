@@ -35,6 +35,9 @@ public class Login extends AppCompatActivity {
         fAuth=FirebaseAuth.getInstance();
         login_email=findViewById(R.id.login_email);
         login_password=findViewById(R.id.login_password);
+        Intent i=getIntent();
+        String mail=i.getStringExtra("mail");
+        login_email.setText(mail);
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,4 +110,9 @@ public class Login extends AppCompatActivity {
 
     }
 
+    public void forgotPassword(View view) {
+        Intent gotoForgotpassword=new Intent(Login.this,ForgotPass.class);
+        startActivity(gotoForgotpassword);
+        finish();
+    }
 }
